@@ -1,6 +1,5 @@
 FROM scratch
 FROM ubuntu:18.04
-LABEL maintainer="vadim@clusterside.com"
 ARG VERSION=2.0.0
 
 RUN apt-get update \
@@ -26,17 +25,21 @@ RUN cd /tmp \
     && export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64" \
     && mvn clean -DskipTests package -Pdist,embedded-hbase-solr \
     && tar -xzvf /tmp/atlas-src/distro/target/apache-atlas-${VERSION}-server.tar.gz -C /opt \
+    && mv /opt/apache-atlas-${VERSION} /opt/apache-atlas/ \
     && rm -Rf /tmp/atlas-src
 
-COPY atlas_start.py.patch atlas_config.py.patch /opt/apache-atlas-${VERSION}/bin/
-COPY pre-conf/atlas-application.properties /opt/apache-atlas-${VERSION}/conf/atlas-application.properties
-COPY pre-conf/atlas-env.sh /opt/apache-atlas-${VERSION}/conf/atlas-env.sh
+COPY atlas_start.py.patch atlas_config.py.patch /opt/apache-atlas/bin/
+COPY pre-conf/atlas-application.properties /opt/apache-atlas/conf/atlas-application.properties
+COPY pre-conf/atlas-env.sh /opt/apache-atlas/conf/atlas-env.sh
+COPY pre-conf/atlas-log4j.xml /opt/apache-atlas/conf/atlas-log4j.xml
 
-RUN cd /opt/apache-atlas-${VERSION}/bin \
+RUN cd /opt/apache-atlas/bin \
     && patch -b -f < atlas_start.py.patch \
     && patch -b -f < atlas_config.py.patch
 
-RUN cd /opt/apache-atlas-${VERSION}/bin \
+RUN cd /opt/apache-atlas/bin \
     && ./atlas_start.py -setup || true
 
-VOLUME ["/opt/apache-atlas-2.0.0/conf", "/opt/apache-atlas-2.0.0/logs"]
+WORKDIR /opt/apache-atlas
+
+ENTRYPOINT [ "bin/atlas_start.py" ]

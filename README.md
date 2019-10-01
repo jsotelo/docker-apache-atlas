@@ -1,4 +1,4 @@
-[![Atlas version](https://img.shields.io/badge/Atlas-2.0.0-brightgreen.svg)](https://github.com/sburn/docker-apache-atlas)
+[![Atlas version](https://img.shields.io/badge/Atlas-2.0.0-brightgreen.svg)](https://github.com/jsotelo/docker-apache-atlas)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 Apache Atlas Docker image
@@ -11,7 +11,7 @@ Configuration
 1. Pull the image:
 
 ```bash
-sudo docker pull sburn/apache-atlas
+sudo docker pull jsotelo/apache-atlas
 ```
 
 2. Start Apache Atlas container exposing default port 21000:
@@ -20,8 +20,7 @@ sudo docker pull sburn/apache-atlas
 sudo docker run --detach \
     -p 21000:21000 \
     --name atlas \
-    sburn/apache-atlas \
-    /opt/apache-atlas-2.0.0/bin/atlas_start.py
+    jsotelo/apache-atlas
 ```
 
 Usage
@@ -33,7 +32,7 @@ If you want to use external Atlas backends, set them up in the config files acco
 Gracefully stop Atlas:
 
 ```bash
-sudo docker exec -ti atlas /opt/apache-atlas-2.0.0/bin/atlas_stop.py
+sudo docker exec -ti atlas /opt/apache-atlas/bin/atlas_stop.py
 ```
 
 Start Atlas overriding settings by environment variables 
@@ -44,30 +43,27 @@ sudo docker run --detach \
     -e "ATLAS_SERVER_OPTS=-server -XX:SoftRefLRUPolicyMSPerMB=0 -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:+PrintTenuringDistribution -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=dumps/atlas_server.hprof -Xloggc:logs/gc-worker.log -verbose:gc -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=1m -XX:+PrintGCDetails -XX:+PrintHeapAtGC -XX:+PrintGCTimeStamps"
     -p 21000:21000 \
     --name atlas \
-    sburn/apache-atlas \
-    /opt/apache-atlas-2.0.0/bin/atlas_start.py
+    jsotelo/apache-atlas
 ```
 
 Expose logs directory on the host to view them directly:
 
 ```bash
 sudo docker run --detach \
-    -v ${PWD}/atlas-logs:/opt/apache-atlas-2.0.0/logs \
+    -v ${PWD}/atlas-logs:/opt/apache-atlas/logs \
     -p 21000:21000 \
     --name atlas \
-    sburn/apache-atlas \
-    /opt/apache-atlas-2.0.0/bin/atlas_start.py
+    jsotelo/apache-atlas
 ```
 
 Expose conf directory on the host to edit configuration files directly:
 
 ```bash
 sudo docker run --detach \
-    -v ${PWD}/pre-conf:/opt/apache-atlas-2.0.0/conf \
+    -v ${PWD}/pre-conf:/opt/apache-atlas/conf \
     -p 21000:21000 \
     --name atlas \
-    sburn/apache-atlas \
-    /opt/apache-atlas-2.0.0/bin/atlas_start.py
+    jsotelo/apache-atlas
 ```
 
 Environment Variables
@@ -89,24 +85,6 @@ The following environment variables are available for configuration:
 | ATLAS_EXPANDED_WEBAPP_DIR | <none> | Where do you want to expand the war file. By Default it is in /server/webapp dir under the base install dir.
 
 
-Bug Tracker
-===========
-
-Bugs are tracked on [GitHub Issues](https://github.com/sburn/docker-apache-atlas/issues).
-In case of trouble, please check there to see if your issue has already been reported.
-If you spotted it first, help us smash it by providing detailed and welcomed feedback.
-
 Credits
 =======
-
-Contributors
-------------
-
-* Vadim Korchagin <vadim@clusterside.com>
-
-Maintainer
-----------
-
-This images is maintained by [Vadim Korchagin](mailto:vadim@clusterside.com)
-
-* https://github.com/sburn/docker-apache-atlas
+This work is entirely based off of https://github.com/sburn/docker-apache-atlas. I just hacked it to pieces :). Feel free to do the same with this work.
